@@ -3,6 +3,8 @@ const cors = require("cors");
 const app = express();
 const http = require("http");
 const mongoose = require("mongoose");
+const { readdirSync } = require("fs");
+
 // backend will start reading .env file
 require("dotenv").config();
 
@@ -20,7 +22,11 @@ mongoose
   .catch((err) => console.log("DB Connection err", err));
 
 // ROUTES
-app.use("/api", require("./routes/user"));
+// app.use("/api", require("./routes/user"));
+// app.use("/api", require("./routes/post"));
+
+// routes middleware
+readdirSync("./routes").map((r) => app.use("/api", require("./routes/" + r)));
 
 app.get("*", (req, res) => {
   res.send("You came to the wrong place!! it is not defined");

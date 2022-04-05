@@ -4,9 +4,11 @@ const User = require("../models/user");
 
 exports.authCheck = async (req, res, next) => {
   try {
+    // console.log(req.headers.authtoken);
     const firebaseUser = await admin
       .auth()
       .verifyIdToken(req.headers.authtoken);
+    // console.log("USER_VALUE==>>", firebaseUser);
     req.user = firebaseUser;
     next();
   } catch (error) {
@@ -22,9 +24,16 @@ exports.createOrUpdateUser = async (req, res) => {
   } else {
     const newUser = await new User({
       email,
-      fullName: user.displayName,
+      fullName: user.name,
       username: email.split("@")[0],
     }).save();
     res.json(newUser);
   }
+};
+
+exports.getSingleUser = async (req, res) => {
+  const { email } = req.user;
+  const foundPerson = await User.findOne({ email });
+  console.log("FOUND==>>", foundPerson);
+  res.json(foundPerson);
 };

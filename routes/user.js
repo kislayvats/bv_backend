@@ -1,5 +1,9 @@
 const express = require("express");
-const { authCheck, createOrUpdateUser } = require("../controllers/user");
+const {
+  authCheck,
+  createOrUpdateUser,
+  getSingleUser,
+} = require("../controllers/user");
 const router = express.Router();
 const myFunction = (req, res, next) => {
   const { name } = req.params;
@@ -12,6 +16,7 @@ const myFunction2 = (req, res) => {
 };
 // ROUTES
 router.get("/user/:name", myFunction, myFunction2);
+router.get("/get/user", authCheck, getSingleUser);
 
 // create account
 router.post("/create/new/user", authCheck, createOrUpdateUser);
